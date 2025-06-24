@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SongShelf 🎵</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fff0f5;
+            max-width: 800px;
+            margin: auto;
+            padding: 40px 30px;
+            color: #333;
+        }
+
+        h1 {
+            color: #ff69b4;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 35px;
+            color: #555;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 30%;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 18px;
+            background-color: #ff69b4;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e754a4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #ffe0ef;
+            color: #444;
+            text-align: left;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .edit-input {
+            width: 95%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-buttons a {
+            color: #d6336c;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .action-buttons a:hover {
+            text-decoration: underline;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 SongShelf 🎶</h1>
+    <p>🔧 Build your personal songs library and keep track of your favorite tunes 💖</p>
+
+    <!-- Form Tambah Lagu -->
+    <form action="/" method="POST">
+        <input type="text" name="title" placeholder="Song Title" required>
+        <input type="text" name="artist" placeholder="Artist Name" required>
+        <button type="submit" name="add">+ Add Song</button>
+    </form>
+
+    <!-- Tabel Lagu -->
+    <table>
+        <thead>
+            <tr>
+                <th>🎵 Title</th>
+                <th>🎤 Artist</th>
+                <th>⚙️ Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                {% if edit_id == song[0] %}
+                <!-- MODE EDIT -->
+                <form action="/" method="POST">
+                    <input type="hidden" name="edit_id" value="{{ song[0] }}">
+                    <td><input class="edit-input" type="text" name="new_title" value="{{ song[1] }}" required></td>
+                    <td><input class="edit-input" type="text" name="new_artist" value="{{ song[2] }}" required></td>
+                    <td class="action-buttons">
+                        <button type="submit" name="edit" class="icon-btn">💾 Save</button>
+                        <a href="/" class="icon-btn">❌ Cancel</a>
+                    </td>
+                </form>
+                {% else %}
+                <!-- MODE VIEW -->
+                <td>{{ song[1] }}</td>
+                <td>{{ song[2] }}</td>
+                <td class="action-buttons">
+                    <form action="/" method="POST" style="display: inline;">
+                        <input type="hidden" name="start_edit_id" value="{{ song[0] }}">
+                        <button type="submit" class="icon-btn">📝 Edit</button>
+                    </form>
+                    <a href="/delete/{{ song[0] }}" class="icon-btn">🗑️ Delete</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
